@@ -1,8 +1,5 @@
 package frc.robot.subsystems;
 
-
-
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
@@ -15,6 +12,8 @@ public class ArmSubsytem extends SubsystemBase {
 
     WPI_TalonSRX leftArm = new WPI_TalonSRX(1);
     WPI_TalonSRX rightArm = new WPI_TalonSRX(2);
+
+    WPI_TalonSRX[] arms = {rightArm, leftArm};
 
     public double KP;
     public double KI;
@@ -38,35 +37,21 @@ public class ArmSubsytem extends SubsystemBase {
     @Override
     public void periodic() {
         if (isRobotOn = false) {
-            rightArm.config_kP(0, KP);
-            rightArm.config_kD(0, KD);
-            rightArm.config_kI(0, KI);
-            rightArm.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-            rightArm.setSensorPhase(true);
-            rightArm.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
+            for(int i = 0; i < 2; i++){
+                arms[i].config_kP(0, KP);
+                arms[i].config_kI(0, KI);
+                arms[i].config_kD(0, KD);
+                arms[i].configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+                arms[i].setSensorPhase(true);
+                arms[i].configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
+            }
 
-
-            leftArm.config_kI(0, 0);
-            leftArm.config_kD(0, 0);
-            leftArm.config_kP(0, 0);
-            leftArm.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-            leftArm.setSensorPhase(true);
-            leftArm.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen, 0);
-
-
-
-
-            MoveArm2();
             MoveArm1();
+            MoveArm2();
             isRobotOn = true;
         }
 
     }
-
-
-
-
-
 
     public double getKP() {
         return KP;
